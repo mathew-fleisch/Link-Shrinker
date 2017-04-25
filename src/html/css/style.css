@@ -1,0 +1,19 @@
+#container { 
+	padding:1em;
+	text-align:center;
+	margin:0 auto;
+	max-width:1000px;
+}
+#form-container, #output-container {
+	margin: 30px auto;
+}
+#output-container { 
+	display: none;
+}
+#copy-btn { 
+	float:left;
+}
+#errors { margin: auto; display:none; }
+.invert-svg { filter: invert(100%); }
+.clear { clear:both; }
+
