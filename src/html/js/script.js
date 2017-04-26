@@ -7,7 +7,6 @@ $(document).ready(function() {
 		var ssl = false;
 		if(isValidURL(input.val())) { 
 			var url = encodeURIComponent($('#long-url').val());
-			// console.log('url: ', decodeURIComponent(url));
 			$.ajax({
 				url: '/api/url',
 				type: 'POST',
@@ -15,14 +14,15 @@ $(document).ready(function() {
 					url: url
 				},
 				success: function(data) {
-					var json = JSON.parse(decodeURIComponent(data));
+					// var json = JSON.parse(decodeURIComponent(data));
+					var json = data;
 					console.log('Success!', json);
 					if(json['success']) {
 						$('#errors').slideUp(ANIMATION_SPEED);
 						var short_url = 
 							location.protocol+'//'
 							+window.location.hostname+(location.port ? ':'+location.port: '')
-							+'/a/'+json['short'];
+							+'/a/'+json['alias'];
 						$('#short-url').val(short_url);
 						$('#visit-count').html(json['existing']);
 						$('#lazy-link').html('<a href="'+short_url+'" target="_blank">'+short_url+'</a>');
@@ -33,7 +33,7 @@ $(document).ready(function() {
 			});
 			$('#output-container').slideDown(ANIMATION_SPEED);
 		} else {
-			console.error('Invalid url...');
+			// console.error('Invalid url...');
 			throw_error('Invalid url...');
 		}
 	});

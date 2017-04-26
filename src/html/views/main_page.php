@@ -10,10 +10,10 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-	<ul class="nav nav-tabs">
+	<!-- <ul class="nav nav-tabs">
 		<li class="active"><a href="/" >Home</a></li>
 		<li class=""><a href="/admin">Admin</a></li>
-	</ul>
+	</ul> -->
 	<div id="container">
 		<h1>Link Shrinker</h1>
 		<div id="errors"></div>

@@ -63,3 +63,10 @@ target/
 
 #Vagrant directory
 .vagrant/
+
+
+
+src/data/online-valid.json.bz2
+src/data/online-valid.json
+src/data/phishy.json
+src/data/update

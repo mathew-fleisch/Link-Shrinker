@@ -16,7 +16,7 @@ sed -i '164,168s/AllowOverride\ None/AllowOverride All/g' /etc/apache2/apache2.c
 service apache2 restart
 
 # Initialize Database
-#mysql -uroot < /var/www/application/config/init.sql
+mysql -uroot < /var/www/data/init.sql
 
 
 # Setup PhishTank service
