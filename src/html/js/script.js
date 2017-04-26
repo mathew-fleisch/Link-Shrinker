@@ -38,7 +38,19 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#long-url').keydown(function (e){ if(e.keyCode == 13){ $('#shrink').click(); } else { $('#output-container').slideUp(ANIMATION_SPEED); }});
+	$('#long-url').keydown(function (e){ 
+		//Key codes for arrows, control (keys that don't make a character)
+		var modifiers = [9,16,17,18,20,37,38,39,40,91,93];
+		var code = parseInt(e.keyCode);
+		if(code == 13){ 
+				$('#shrink').click(); 
+		} else {
+			//Hide output container if any non-modifier key or non-arrow is pressed
+			if(modifiers.indexOf(code) === -1) {
+				$('#output-container').slideUp(ANIMATION_SPEED);
+			}
+		}
+	});
 	$(document).on('click', '#short-url-label', function() { $('#copy-btn').click(); });
 
 });

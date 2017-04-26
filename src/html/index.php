@@ -2,6 +2,7 @@
 require '../flight/Flight.php';
 require '../flight/db_model.php';
 require '../flight/constants.php';
+require '../flight/helpers.php';
 
 
 Flight::register('db', 'PDO', array('mysql:host=localhost;port=3306;dbname=shrink', 'root', ''), function($db) {
@@ -11,6 +12,22 @@ Flight::register('db', 'PDO', array('mysql:host=localhost;port=3306;dbname=shrin
 
 Flight::route('/', function(){
     Flight::render('main_page.php', array());
+});
+
+Flight::route('/a/@alias', function($alias){
+	$conn    = Flight::db();
+	$request = Flight::request();
+	if(visit($conn, $alias, $request->ip, $request->user_agent, $request->referrer)) {
+		$res = get_url($conn, $alias);
+		if(is_object($res)) {
+			echo '<script type="text/javascript">window.location.href = "'.$res->url.'";</script>';
+			// header('Location: http://google.com');
+			// header('Location: '.$res->url);
+		} else { echo $alias.ERROR_NOT_FOUND; exit(); }
+	} else { 
+		echo ERROR_REDIRECT_LOG_FAIL;
+		exit();
+	}
 });
 
 Flight::route('GET /api/url/@alias', function($alias){
@@ -108,27 +125,4 @@ Flight::route('POST /api/phish/url', function(){
 
 Flight::start();
 
-
-
-function valid_url($url) { 
-	if(strlen($url)) {
-		if(preg_match("/^http/", $url)) {
-			if (!filter_var($url, FILTER_VALIDATE_URL) === false) {
-				return array(KEYS_IS_VALID=>true);
-			} else { return array(KEYS_IS_VALID=>false, KEYS_ERROR=>ERROR_INVALID_URL); }
-		} else { return array(KEYS_IS_VALID=>false, KEYS_ERROR=>ERROR_START_HTTP); }
-	} else { return array(KEYS_IS_VALID=>false, KEYS_ERROR=>ERROR_EMPTY_URL); }
-}
-
-function extract_url($data) {
-	if(array_key_exists(KEYS_URL, $data)) {
-		if(strlen($data[KEYS_URL])) {
-			$url = strip_tags(urldecode(strip_tags($data[KEYS_URL])));
-			$valid = valid_url($url);
-			if($valid[KEYS_IS_VALID]) {
-				return $url;
-			} else { return $valid; }
-		} else { return array(KEYS_IS_VALID=>false, KEYS_ERROR=>ERROR_EMPTY_URL); }
-	} else { return array(KEYS_IS_VALID=>false, KEYS_ERROR=>ERROR_EMPTY_URL); }
-}
 ?>
