@@ -71,7 +71,7 @@ fi
 
 
 /api/phish/update - GET
-	- This endpoint is used on the back-end only to update the phish-tank database hourly
+	- This endpoint is used on the back-end only to update the phish-tank database hourly. Warning: this endpoint takes about 5 minutes to process.
 	- @param N/A
 	- Sample Response
 	{
