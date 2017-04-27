@@ -27,8 +27,7 @@ $(document).ready(function() {
 						$('#short-url').val(short_url);
 						$('#visit-count').html(json['existing']);
 						$('#lazy-link').html('<a href="'+short_url+'" target="_blank" onClick="add_visitor();">'+short_url+'</a>');
-
-						if(input.length < short_url.length && json['existing'] < 1) { 
+						if(url.length < short_url.length && json['existing'] < 1) { 
 							show_info('info', 'Technically this url is not shorter... but we made it for you anyway.');
 						}
 					} else { 
@@ -79,10 +78,10 @@ function show_info(type, msg, hide_in = INFO_TIMEOUT) {
 	).slideDown(ANIMATION_SPEED);
 
 	if(type == 'error') {
-		$('#output-container').slideUp(ANIMATION_SPEED).hide();
+		$('#output-container').slideUp(ANIMATION_SPEED);
 	} else { 
 		setTimeout(function() {
-			$('#info-container').slideUp(ANIMATION_SPEED).hide();
+			$('#errors').slideUp(ANIMATION_SPEED);
 		}, hide_in);
 	}
 }

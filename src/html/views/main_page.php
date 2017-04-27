@@ -17,7 +17,6 @@
 	<div id="container">
 		<h1>Link Shrinker</h1>
 		<div id="errors"></div>
-		<div id="info-container"></div>
 		<div class="form-group" id="form-container">
 			<div class="input-group">
 				<input type="text" class="form-control" id="long-url" value="http://" placeholder="http://" />

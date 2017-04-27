@@ -17,7 +17,6 @@
 	<div id="container">
 		<h1>Admin</h1>
 		<div id="errors"></div>
-		<div id="info-container"></div>
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>

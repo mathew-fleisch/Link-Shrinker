@@ -26,7 +26,7 @@ function get_url($conn, $alias) {
 }
 
 
-function get_urls($conn, $limit = 20, $offset = 0) {
+function get_urls($conn) {
 	$stmt = $conn->prepare("SELECT u.id, IFNULL(COUNT(v.id), 0) AS visit_count, u.alias, u.url, u.ip, u.time, u.active FROM urls AS u LEFT JOIN visits as v on u.alias = v.alias GROUP BY v.alias ORDER BY visit_count DESC;");
 	$stmt->execute();
 	return $stmt->fetchAll();
@@ -76,19 +76,44 @@ function visit($conn, $alias, $ip, $browser, $referrer) {
 
 
 
+
+/* *********************************************************** 
+	Phish Tank Functions
+ *********************************************************** */
+/**
+ * is_phishy() - Checks the db for a blacklisted url 
+ *
+ * @param       string  $url    User Input url
+ * @return      int (phish_id)
+ */
 function is_phishy($conn, $url) { 
 	$stmt = $conn->prepare("SELECT phish_id FROM phish_tank WHERE url = ?");
 	$stmt->execute(array($url));
 	$res = $stmt->fetch();
 	return (is_object($res) ? $res->phish_id : 0);
 }
+/**
+ * put_phish() - Inserts a url and id into a local database for quick lookups 
+ *
+ * @param       int     $phish_id    User Input phish_id
+ * @param       string  $url         User Input url
+ * @return      string
+ */
 function put_phish($conn, $phish_id, $url) {
 	$stmt = $conn->prepare("INSERT INTO phish_tank (phish_id, url) VALUES (?,?)");
 	$stmt->bindParam(1, $phish_id);
 	$stmt->bindParam(2, $url);
 	return $stmt->execute();
 }
-
+/**
+ * phish_log() - Log the cronjob script info 
+ *
+ * @param       string  $added    Number of blacklisted urls added this hour
+ * @param       string  $ip       User's ip address
+ * @param       string  $browser  User's user-agent
+ * @param       string  $referrer User's referring website 
+ * @return      string
+ */
 function phish_log($conn, $added, $ip, $browser, $referrer) {
 	$stmt = $conn->prepare("INSERT INTO phish_log (added, ip, browser, referrer) VALUES (?,?,?,?)");
 	$stmt->bindParam(1, $added);
@@ -97,8 +122,12 @@ function phish_log($conn, $added, $ip, $browser, $referrer) {
 	$stmt->bindParam(4, $referrer);
 	return $stmt->execute();
 }
-
-function get_phish_log($conn, $limit = 20, $offset = 0) {
+/**
+ * get_phish_log() - Returns the cronjob log of how many blacklisted urls are added each hour 
+ *
+ * @return      Array of Objects 
+ */
+function get_phish_log($conn) {
 	$stmt = $conn->prepare("SELECT * FROM phish_log");
 	$stmt->execute();
 	return $stmt->fetchAll();
@@ -111,9 +140,9 @@ function get_phish_log($conn, $limit = 20, $offset = 0) {
 
 
 
-
-
-
+/* *********************************************************** 
+	Error/Log Functions
+ *********************************************************** */
 /**
  * get_error() - Url db lookup
  *
