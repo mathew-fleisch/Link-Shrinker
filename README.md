@@ -92,6 +92,7 @@ fi
 
 
 ### Benchmarks
+**Average requests per second: 131.64**
 ```
 $ ab -k -c 150 -n 1000 http://127.0.0.1/
 This is ApacheBench, Version 2.3 <$Revision: 1528965 $>
