@@ -10,7 +10,6 @@ function check_existing($conn, $url) {
 	$stmt = $conn->prepare("SELECT u.alias, COUNT(v.id) AS visits FROM urls AS u, visits AS v WHERE u.url = ? AND u.alias = v.alias;");
 	$stmt->execute(array($url));
 	return $stmt->fetch();
-
 }
 
 
@@ -24,6 +23,13 @@ function get_url($conn, $alias) {
 	$stmt = $conn->prepare("SELECT url FROM urls WHERE alias = ?");
 	$stmt->execute(array($alias));
 	return $stmt->fetch();
+}
+
+
+function get_urls($conn, $limit = 20, $offset = 0) {
+	$stmt = $conn->prepare("SELECT u.id, IFNULL(COUNT(v.id), 0) AS visit_count, u.alias, u.url, u.ip, u.time, u.active FROM urls AS u LEFT JOIN visits as v on u.alias = v.alias GROUP BY v.alias ORDER BY visit_count DESC;");
+	$stmt->execute();
+	return $stmt->fetchAll();
 }
 
 /**
@@ -83,9 +89,20 @@ function put_phish($conn, $phish_id, $url) {
 	return $stmt->execute();
 }
 
+function phish_log($conn, $added, $ip, $browser, $referrer) {
+	$stmt = $conn->prepare("INSERT INTO phish_log (added, ip, browser, referrer) VALUES (?,?,?,?)");
+	$stmt->bindParam(1, $added);
+	$stmt->bindParam(2, $ip);
+	$stmt->bindParam(3, $browser);
+	$stmt->bindParam(4, $referrer);
+	return $stmt->execute();
+}
 
-
-
+function get_phish_log($conn, $limit = 20, $offset = 0) {
+	$stmt = $conn->prepare("SELECT * FROM phish_log");
+	$stmt->execute();
+	return $stmt->fetchAll();
+}
 
 
 

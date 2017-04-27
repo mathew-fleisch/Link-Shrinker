@@ -10,13 +10,14 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-	<!-- <ul class="nav nav-tabs">
+	<ul class="nav nav-tabs">
 		<li class="active"><a href="/" >Home</a></li>
 		<li class=""><a href="/admin">Admin</a></li>
-	</ul> -->
+	</ul>
 	<div id="container">
 		<h1>Link Shrinker</h1>
 		<div id="errors"></div>
+		<div id="info-container"></div>
 		<div class="form-group" id="form-container">
 			<div class="input-group">
 				<input type="text" class="form-control" id="long-url" value="http://" placeholder="http://" />
@@ -34,7 +35,7 @@
 				<span class="input-group-addon" id="visit-count"></span>
 				<input class="form-control" id="short-url" value="" readonly>
 				<span class="input-group-btn">
-					<button type="button" class="btn btn-default" id="copy-btn" data-clipboard-target="#short-url">
+					<button type="button" class="btn btn-default" id="copy-btn" data-clipboard-target="#short-url" onClick="show_info('info', 'Copied to clipboard!', 1);">
 					    <img class="invert-svg" width="13" src="assets/clippy.svg" alt="Copy to clipboard">
 					</button>
 				</span>

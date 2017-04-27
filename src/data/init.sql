@@ -4,12 +4,13 @@ USE shrink;
 CREATE TABLE IF NOT EXISTS `urls` (
   `id` int(255) unsigned NOT NULL AUTO_INCREMENT,
   `alias` varchar(50) NOT NULL,
-  `url` text NOT NULL,
+  `url` varchar(500) NOT NULL,
   `ip` varchar(39) NOT NULL,
   `time` timestamp DEFAULT CURRENT_TIMESTAMP,
   `active` tinyint(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `alias` (`alias`)
+  UNIQUE KEY `alias` (`alias`),
+  UNIQUE KEY `url` (`url`)
 );
 
 CREATE TABLE IF NOT EXISTS `visits` (
@@ -33,6 +34,16 @@ CREATE TABLE IF NOT EXISTS `error_log` (
   `id` int(255) unsigned NOT NULL AUTO_INCREMENT,
   `error_code` varchar(50) NOT NULL,
   `message` text,
+  `ip` varchar(39) NOT NULL,
+  `browser` text,
+  `referrer` text,
+  `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `phish_log` (
+  `id` int(255) unsigned NOT NULL AUTO_INCREMENT,
+  `added` int(100) NOT NULL,
   `ip` varchar(39) NOT NULL,
   `browser` text,
   `referrer` text,

@@ -20,3 +20,8 @@ function extract_url($data) {
 		} else { return array(KEYS_IS_VALID=>false, KEYS_ERROR=>ERROR_EMPTY_URL); }
 	} else { return array(KEYS_IS_VALID=>false, KEYS_ERROR=>ERROR_EMPTY_URL); }
 }
+
+function redirect_url($url) {
+	return '<script type="text/javascript">window.location.href = "'.$url.'";</script>';
+
+}

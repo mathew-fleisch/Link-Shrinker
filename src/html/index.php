@@ -14,15 +14,23 @@ Flight::route('/', function(){
     Flight::render('main_page.php', array());
 });
 
+Flight::route('/admin', function(){
+	$conn    = Flight::db();
+	$request = Flight::request();
+
+	$urls = get_urls($conn);
+	$phish_logs = get_phish_log($conn);
+
+    Flight::render('admin_page.php', array('urls'=>$urls,'phish_logs'=>$phish_logs));
+});
+
 Flight::route('/a/@alias', function($alias){
 	$conn    = Flight::db();
 	$request = Flight::request();
 	if(visit($conn, $alias, $request->ip, $request->user_agent, $request->referrer)) {
 		$res = get_url($conn, $alias);
 		if(is_object($res)) {
-			echo '<script type="text/javascript">window.location.href = "'.$res->url.'";</script>';
-			// header('Location: http://google.com');
-			// header('Location: '.$res->url);
+			echo redirect_url($res->url);
 		} else { echo $alias.ERROR_NOT_FOUND; exit(); }
 	} else { 
 		echo ERROR_REDIRECT_LOG_FAIL;
@@ -94,24 +102,29 @@ Flight::route('POST /api/url', function(){
 
 
 Flight::route('GET /api/phish/update', function() {
-	$conn = Flight::db();
-	$count = 0;
-	$total = 0;
+	$conn    = Flight::db();
+	$request = Flight::request();
+	$count   = 0;
+	$total   = 0;
 	$json = json_decode(file_get_contents(PHISH_PATH), true);
 	foreach($json as $url=>$phish_id) {
 		if(!is_phishy($conn, $url)) {
 			if(!put_phish($conn, $phish_id, $url)) { 
-				Flight::json(array('error'=>"Could not insert: $phish_id: $url"));;
+				Flight::json(array('error'=>"Could not insert: $phish_id: $url"));
 				break;
 			} else { $count++; }
 		} else { $total++; }
 	}
-	Flight::json(array('added'=>$count, 'total'=>$total));
+	if(phish_log($conn, $count, $request->ip, $request->user_agent, $request->referrer)) { 
+		Flight::json(array('added'=>$count, 'total'=>$total));
+	} else { 
+		Flight::json(array('error'=>'phish_log failed.', 'added'=>$count, 'total'=>$total));
+	}
 });
 
 
 Flight::route('POST /api/phish/url', function(){
-	$conn = Flight::db();
+	$conn    = Flight::db();
 
 	$data = (array)Flight::request()->data;
 	$data = array_pop($data);
