@@ -93,7 +93,9 @@ fi
 
 ### Benchmarks
 **Average requests per second: 131.64**
-Note: My [first attempt](https://github.com/mathew-fleisch/Short-URL) got closer to 25/second
+
+**Note:** My [first attempt](https://github.com/mathew-fleisch/Short-URL) got closer to 25/second
+
 ```
 $ ab -k -c 150 -n 1000 http://127.0.0.1/
 This is ApacheBench, Version 2.3 <$Revision: 1528965 $>
